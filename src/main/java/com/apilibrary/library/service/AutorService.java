@@ -4,8 +4,10 @@ package com.apilibrary.library.service;
 import com.apilibrary.library.controller.dto.AutorDTO;
 import com.apilibrary.library.exceptions.OperacaoNaopermitidaException;
 import com.apilibrary.library.model.Autor;
+import com.apilibrary.library.model.Usuario;
 import com.apilibrary.library.repository.AutorRepository;
 import com.apilibrary.library.repository.LivroRepository;
+import com.apilibrary.library.security.SecurityService;
 import com.apilibrary.library.validator.AutorValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
@@ -23,10 +25,13 @@ public class AutorService {
     private final AutorRepository repository;
     private final AutorValidator validator;
     private final LivroRepository livroRepository;
+    private final SecurityService securityService;
 
 
     public Autor salvar(Autor autor) {
         validator.validar(autor);
+        Usuario usuario = securityService.obterUsuarioLogado();
+        autor.setUsuario(usuario);
         return repository.save(autor);
     }
 

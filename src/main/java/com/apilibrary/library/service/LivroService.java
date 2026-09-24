@@ -3,7 +3,9 @@ package com.apilibrary.library.service;
 
 import com.apilibrary.library.model.Generos;
 import com.apilibrary.library.model.Livro;
+import com.apilibrary.library.model.Usuario;
 import com.apilibrary.library.repository.LivroRepository;
+import com.apilibrary.library.security.SecurityService;
 import com.apilibrary.library.validator.LivroValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,9 +26,12 @@ import static com.apilibrary.library.repository.specs.LivroSpesc.*;
 public class LivroService {
     private final LivroRepository livroRepository;
     private final LivroValidator livroValidator;
+    private final SecurityService securityService;
 
     public Livro salvar(Livro livro){
         livroValidator.validar(livro);
+        Usuario usuario = securityService.obterUsuarioLogado();
+        livro.setUsuario(usuario);
         return livroRepository.save(livro);
     }
 
